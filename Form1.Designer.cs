@@ -40,6 +40,8 @@
             this.studentLabel = new System.Windows.Forms.Label();
             this.databaseButton = new System.Windows.Forms.Button();
             this.exitButton = new System.Windows.Forms.Button();
+            this.logOutButton = new System.Windows.Forms.Button();
+            this.punchListBox = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // studentIdTextBox
@@ -65,7 +67,7 @@
             // submitButton
             // 
             this.submitButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.submitButton.Location = new System.Drawing.Point(94, 232);
+            this.submitButton.Location = new System.Drawing.Point(59, 688);
             this.submitButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(146, 33);
@@ -111,7 +113,7 @@
             this.nameResultLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nameResultLabel.Location = new System.Drawing.Point(149, 114);
             this.nameResultLabel.Name = "nameResultLabel";
-            this.nameResultLabel.Size = new System.Drawing.Size(95, 25);
+            this.nameResultLabel.Size = new System.Drawing.Size(134, 25);
             this.nameResultLabel.TabIndex = 6;
             this.nameResultLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -121,7 +123,7 @@
             this.extraCreditLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.extraCreditLabel.Location = new System.Drawing.Point(149, 153);
             this.extraCreditLabel.Name = "extraCreditLabel";
-            this.extraCreditLabel.Size = new System.Drawing.Size(95, 25);
+            this.extraCreditLabel.Size = new System.Drawing.Size(134, 25);
             this.extraCreditLabel.TabIndex = 7;
             this.extraCreditLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -148,7 +150,7 @@
             // databaseButton
             // 
             this.databaseButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.databaseButton.Location = new System.Drawing.Point(249, 217);
+            this.databaseButton.Location = new System.Drawing.Point(451, 339);
             this.databaseButton.Name = "databaseButton";
             this.databaseButton.Size = new System.Drawing.Size(143, 63);
             this.databaseButton.TabIndex = 10;
@@ -158,19 +160,42 @@
             // 
             // exitButton
             // 
-            this.exitButton.Location = new System.Drawing.Point(485, 287);
+            this.exitButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.exitButton.Location = new System.Drawing.Point(366, 688);
             this.exitButton.Name = "exitButton";
-            this.exitButton.Size = new System.Drawing.Size(75, 23);
+            this.exitButton.Size = new System.Drawing.Size(116, 33);
             this.exitButton.TabIndex = 11;
             this.exitButton.Text = "Exit";
             this.exitButton.UseVisualStyleBackColor = true;
             this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
             // 
+            // logOutButton
+            // 
+            this.logOutButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.logOutButton.Location = new System.Drawing.Point(213, 688);
+            this.logOutButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.logOutButton.Name = "logOutButton";
+            this.logOutButton.Size = new System.Drawing.Size(146, 33);
+            this.logOutButton.TabIndex = 12;
+            this.logOutButton.Text = "Log Out";
+            this.logOutButton.UseVisualStyleBackColor = true;
+            this.logOutButton.Click += new System.EventHandler(this.logOutButton_Click);
+            // 
+            // punchListBox
+            // 
+            this.punchListBox.FormattingEnabled = true;
+            this.punchListBox.Location = new System.Drawing.Point(184, 395);
+            this.punchListBox.Name = "punchListBox";
+            this.punchListBox.Size = new System.Drawing.Size(210, 225);
+            this.punchListBox.TabIndex = 13;
+            // 
             // tutorCheckIn
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(639, 322);
+            this.ClientSize = new System.Drawing.Size(606, 733);
+            this.Controls.Add(this.punchListBox);
+            this.Controls.Add(this.logOutButton);
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.databaseButton);
             this.Controls.Add(this.studentLabel);
@@ -207,6 +232,8 @@
         private System.Windows.Forms.Label studentLabel;
         private System.Windows.Forms.Button databaseButton;
         private System.Windows.Forms.Button exitButton;
+        private System.Windows.Forms.Button logOutButton;
+        private System.Windows.Forms.ListBox punchListBox;
     }
 }
 

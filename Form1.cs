@@ -16,20 +16,23 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 
+
 namespace TutorLab
 {
     public partial class tutorCheckIn : Form
     {
-        StreamWriter punchFile = new StreamWriter("D:\\School\\0Spring2025\\CSC289\\TutorLab\\TutorLab\\Punches.txt", true);
-        
+        StreamWriter punchFile = new StreamWriter("E:\\School\\0Spring2025\\CSC289\\TutorLab\\TutorLab\\Punches.txt", true);
+        // or D depending on school or home
         public class CustomPunch
         {
             public string DisplayedName { get; set; }
             public int HiddenPunchId { get; set; }
 
+            public string CourseName { get; set; }
+
             public override string ToString()
             {
-                return DisplayedName;
+                return $"{DisplayedName} ({CourseName})";
             }
         }
 
@@ -149,21 +152,23 @@ namespace TutorLab
             return valid;
         }
 
-        private int DBInsertTime(string studentNum, string studentName, DayOfWeek punchDay, DateTime punchInTime)
+        private int DBInsertTime(string studentNum, string studentName, DayOfWeek punchDay, DateTime punchInTime, string courseName)
         {
             int punchId = 0;
             string conString = "server=localhost;uid=root;database=tutor_lab;";
             using (MySqlConnection con = new MySqlConnection(conString))
             {
                 con.Open();
-                string insertQuery = "INSERT INTO punches (student_num, student_name, punch_day, punch_in_time) " +
-                                     "VALUES (@student_num, @student_name, @punch_day, @punch_in_time)";
+                string insertQuery = "INSERT INTO punches (student_num, student_name, punch_day, punch_in_time, course_name) " +
+                                     "VALUES (@student_num, @student_name, @punch_day, @punch_in_time, @course_name)";
                 using (MySqlCommand insertCmd = new MySqlCommand(insertQuery, con))
                 {
                     insertCmd.Parameters.AddWithValue("@student_num", studentNum);
                     insertCmd.Parameters.AddWithValue("@student_name", studentName);
                     insertCmd.Parameters.AddWithValue("@punch_day", punchDay.ToString());
                     insertCmd.Parameters.AddWithValue("@punch_in_time", punchInTime);
+                    insertCmd.Parameters.AddWithValue("@course_name", courseName);
+
                     insertCmd.ExecuteNonQuery(); // Execute the insert
 
                     string selectQuery = "SELECT LAST_INSERT_ID();";
@@ -183,7 +188,7 @@ namespace TutorLab
             using (MySqlConnection con = new MySqlConnection(conString))
             {
                 con.Open();
-                string query = "SELECT DISTINCT punch_id, student_name FROM punches WHERE punch_out_time IS NULL";
+                string query = "SELECT DISTINCT punch_id, student_name, course_name FROM punches WHERE punch_out_time IS NULL";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, con))
                 {
@@ -195,7 +200,10 @@ namespace TutorLab
                             CustomPunch item = new CustomPunch
                             {
                                 HiddenPunchId = reader.GetInt32("punch_id"), // Get punch_id
-                                DisplayedName = reader.GetString("student_name") // Get student_name
+                                DisplayedName = reader.GetString("student_name"), // Get student_name
+                                CourseName = reader.IsDBNull(reader.GetOrdinal("course_name"))
+                                    ? "N/A"
+                                    : reader.GetString("course_name")
                             };
                             punchListBox.Items.Add(item);
                         }
@@ -247,8 +255,15 @@ namespace TutorLab
             bool readerValid = ReaderIsValid();
             bool dateValid = DateIsValid();
 
+            ShowCourseSelectionForm();
+
             if (readerValid)
             {
+                if (string.IsNullOrEmpty(selectedCourse))
+                {
+                    MessageBox.Show("Please select a course before punching in.");
+                }
+
                 string conString = "server=localhost;uid=root;database=tutor_lab;";
                 using (MySqlConnection con = new MySqlConnection(conString))
                 {
@@ -283,10 +298,10 @@ namespace TutorLab
                                     long epochTime = (long)timeDifference.TotalSeconds;
                                     nameResultLabel.Text = fName + " " + lName;
                                     DayOfWeek today = DateTime.Now.DayOfWeek;
-                                    punchFile.WriteLine(nameResultLabel.Text + ", " + studentNumLabel.Text + ", " + today + ", " + currentTime);
+                                    punchFile.WriteLine(nameResultLabel.Text + ", " + studentNumLabel.Text + ", " + today + ", " + currentTime + ", " + selectedCourse);
 
                                     // DB INSERT: Pass the correct student_id
-                                    DBInsertTime(studentNum, fName + " " + lName, today, currentTime);
+                                    DBInsertTime(studentNum, fName + " " + lName, today, currentTime, selectedCourse);
 
                                     MessageBox.Show("Logged In");
                                     PopulatePunchListBox();
@@ -299,7 +314,7 @@ namespace TutorLab
 
                                 studentIdTextBox.Text = string.Empty;
                                 nameResultLabel.Text = string.Empty;
-                                studentNumLabel.Text = string.Empty;
+                                //studentNumLabel.Text = string.Empty;
                             }
                         }
                     }
@@ -318,9 +333,61 @@ namespace TutorLab
         }
 
 
+        private string selectedCourse;
+
+        public void SetSelectedCourse(string courseName)
+        {
+            selectedCourse = courseName;
+            
+        }
+
+        private void ShowCourseSelectionForm()
+        {
+            string studentNum = studentNumLabel.Text;
+
+            if (string.IsNullOrEmpty(studentNum))
+            {
+                MessageBox.Show("Please enter a valid student ID");
+                return;
+            }
+
+            SchoolData frm = new SchoolData(studentNum);
+
+            frm.CourseSelected += (course) =>
+            {
+                selectedCourse = course;
+               /* string studentName = nameResultLabel.Text;
+                string displayText = $"{studentName} - {course}";
+                punchListBox.Items.Add(course); */
+            };
+
+            frm.ShowDialog();
+
+        }
+
         private void databaseButton_Click(object sender, EventArgs e)
         {
-            SchoolData frm = new SchoolData();
+            string studentNum = studentNumLabel.Text;
+
+            if (string.IsNullOrEmpty(studentNum))
+            {
+                MessageBox.Show("Please enter a valid student id.");
+                return;
+            }
+
+            SchoolData frm = new SchoolData(studentNum);
+
+
+            frm.CourseSelected += (course) =>
+            {
+                selectedCourse = course;
+
+                string studentName = nameLabel.Text;
+                string displayText = $"{studentName} - {course}";
+                punchListBox.Items.Add(course);
+            };
+
+
             frm.Show();
         }
 
@@ -334,6 +401,8 @@ namespace TutorLab
         {
             punchFile.Close();
         }
+
+        
 
         private void logOutButton_Click(object sender, EventArgs e)
         {

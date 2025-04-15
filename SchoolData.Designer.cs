@@ -30,6 +30,7 @@
         {
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.showButton = new System.Windows.Forms.Button();
+            this.selectedCourseBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,11 +52,22 @@
             this.showButton.UseVisualStyleBackColor = true;
             this.showButton.Click += new System.EventHandler(this.showButton_Click);
             // 
+            // selectedCourseBtn
+            // 
+            this.selectedCourseBtn.Location = new System.Drawing.Point(350, 379);
+            this.selectedCourseBtn.Name = "selectedCourseBtn";
+            this.selectedCourseBtn.Size = new System.Drawing.Size(86, 42);
+            this.selectedCourseBtn.TabIndex = 2;
+            this.selectedCourseBtn.Text = "Select";
+            this.selectedCourseBtn.UseVisualStyleBackColor = true;
+            this.selectedCourseBtn.Click += new System.EventHandler(this.selectedCourseBtn_Click);
+            // 
             // SchoolData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.selectedCourseBtn);
             this.Controls.Add(this.showButton);
             this.Controls.Add(this.dataGridView1);
             this.Name = "SchoolData";
@@ -69,5 +81,6 @@
 
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button showButton;
+        private System.Windows.Forms.Button selectedCourseBtn;
     }
 }
